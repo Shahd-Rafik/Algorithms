@@ -1,0 +1,109 @@
+# Heap-Sort Assignment: Implementation, Analysis, and Execution
+
+# Function to heapify a subtree rooted at index i
+def heapify(arr, n, i):
+    """
+    Adjusts a subtree rooted at index i to satisfy the max-heap property.
+
+    Parameters:
+    arr (list): The array representation of the heap.
+    n (int): The size of the heap.
+    i (int): The root index of the subtree.
+
+    Time Complexity: O(log n), as it traverses the height of the heap.
+    """
+    largest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
+    
+    # Check if left child exists and is greater than root
+    if left < n and arr[left] > arr[largest]:
+        largest = left
+    
+    # Check if right child exists and is greater than the largest so far
+    if right < n and arr[right] > arr[largest]:
+        largest = right
+    
+    # Swap and continue heapifying if root is not the largest
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        heapify(arr, n, largest)
+
+# Function to build a max-heap from the array
+def buildHeap(arr):
+    """
+    Builds a max-heap from the input array.
+
+    Parameters:
+    arr (list): The array to be converted into a heap.
+
+    Time Complexity: O(n), as it processes all nodes from bottom up.
+    """
+    n = len(arr)
+    # Start from the last non-leaf node and move upwards
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+
+# Function to perform Heap-Sort
+def heapSort(arr):
+    """
+    Sorts an array in ascending order using Heap-Sort.
+
+    Parameters:
+    arr (list): The array to be sorted.
+
+    Time Complexity: O(n log n), with O(n) for building the heap and O(n log n) for extraction.
+    Space Complexity: O(1), as the sorting is done in-place.
+    """
+    n = len(arr)
+    
+    # Step 1: Build a max-heap
+    buildHeap(arr)
+    
+    # Step 2: Extract elements one by one
+    for i in range(n - 1, 0, -1):
+        # Move current root to the end
+        arr[i], arr[0] = arr[0], arr[i]
+        # Call heapify on the reduced heap
+        heapify(arr, i, 0)
+
+# Main execution block for testing
+if __name__ == "__main__":
+    # Input array to be sorted
+    arr = [15, 3, 17, 10, 84, 19, 6, 22, 9]
+    print("Original array:", arr)
+    
+    # Perform Heap-Sort
+    heapSort(arr)
+    
+    # Output the sorted array
+    print("Sorted array:", arr)
+
+# --- Analysis Section ---
+"""
+Analysis of Algorithms:
+
+1. Heapify:
+   - Adjusts a subtree to satisfy the max-heap property.
+   - Time Complexity: O(log n), as it traverses the height of the heap.
+
+2. BuildHeap:
+   - Converts an array into a max-heap by calling heapify for all non-leaf nodes.
+   - Time Complexity: O(n), derived from the sum of heapify costs across heap levels.
+
+3. HeapSort:
+   - Builds a heap in O(n) and extracts the maximum element n-1 times, each requiring O(log n) for heapify.
+   - Total Time Complexity: O(n log n).
+
+4. Space Complexity:
+   - In-place sorting requires no additional memory, so Space Complexity = O(1).
+
+Properties of Heap-Sort:
+- Deterministic and comparison-based sorting algorithm.
+- Performs well for large datasets with O(n log n) complexity.
+- Space-efficient, but not stable (relative order of equal elements is not preserved).
+
+Example:
+Original array: [15, 3, 17, 10, 84, 19, 6, 22, 9]
+Sorted array: [3, 6, 9, 10, 15, 17, 19, 22, 84]
+"""
